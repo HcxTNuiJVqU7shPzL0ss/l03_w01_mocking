@@ -33,8 +33,13 @@ Use for Shopping Cart.
 class ShoppingCart:
     """Use to represent a shopping cart in a webshop."""
 
+    def __init__(self, database = None):
+        self.database = database
+
     def set_database(self, database):
         self.database = database
 
     def add_item(self, name, price):
+        if self.database is None:
+            raise RuntimeError('No database set')
         self.database.add_item_to_cart(name, price)
