@@ -24,11 +24,11 @@ To test: Shopping Cart.
 import pytest
 
 
-from src.webshop.shopping_cart import ShoppingCart
+from webshop.shopping_cart import ShoppingCart
 
-from src.webshop.database import Database
+from webshop.database import Database
 
-from src.webshop.item import Item
+from webshop.item import Item
 
 
 # 1. We add an item to an empty shopping cart
@@ -89,6 +89,12 @@ def test_shopping_cart__add_item_to_empty_cart(mocker, seeds,
 
 
 def test_shopping_cart__add_item_to_cart(db, seeds, cart):
+    """Use to unit test add_item of Shopping_cart.
+
+    Specifically test that we can add an item to a cart
+    that already contains at least one item.
+    US1, AC1, part 2.
+    """
     # Arrange
     cart.set_database(db)
     # Since the cart is not empty, add_item will have been called
