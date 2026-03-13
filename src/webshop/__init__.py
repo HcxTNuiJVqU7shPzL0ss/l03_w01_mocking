@@ -1,4 +1,4 @@
-"""Module for init, mypackage folder.
+"""Module for init, src/webshop folder.
 
 This directory contains work done for 2025/2026 TAP HT 25D course.
 Lesson 03, week 01.

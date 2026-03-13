@@ -33,5 +33,6 @@ class Item:
     """Use to store name and price of an item."""
 
     def __init__(self, name, price):
+        """Use to initialize an object."""
         self.name = name
         self.price = price

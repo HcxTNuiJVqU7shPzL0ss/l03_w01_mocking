@@ -20,9 +20,13 @@ Use for Database.
 # limitations under the License.
 #####################################################################
 
+
+from dataclasses import dataclass
+
+
+@dataclass
 class Database:
+    """Use to represent the database for the webshop."""
 
     def add_item_to_cart(self, name, price):
-        pass
-
-    pass
+        """Use to add an item to the cart."""

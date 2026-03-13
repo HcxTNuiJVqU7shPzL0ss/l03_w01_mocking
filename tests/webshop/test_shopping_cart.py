@@ -43,25 +43,27 @@ from webshop.item import Item
 # Item-class: name, price
 
 
-@pytest.fixture
-def seeds():
+@pytest.fixture(name='seeds')
+def seeds_fixture():
     """Use to represent a specific seeds item."""
     return Item('seeds', 25)
 
-@pytest.fixture
-def empty_cart():
+@pytest.fixture(name='empty_cart')
+def empty_cart_fixture():
     """Use to represent an empty shopping cart."""
     return ShoppingCart()
 
-@pytest.fixture
-def cart(db):
+@pytest.fixture(name='cart')
+def cart_fixture(db):
+    """Use to handle a cart with item(s) already."""
     c = ShoppingCart()
     c.set_database(db)
     c.add_item(name='shovel', price=50)
     return c
 
-@pytest.fixture
-def db(mocker):
+@pytest.fixture(name='db')
+def db_fixture(mocker):
+    """Use to handle mocker database."""
     mock_db = mocker.Mock(spec=Database)
     mock_db.add_item_to_cart.return_value = None
     return mock_db
