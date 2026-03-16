@@ -31,22 +31,21 @@ from lake_friends.database import Database
 from lake_friends.item import Item
 
 
-
 @pytest.fixture(name='canoe')
 def canoe_fixture():
     """Use to represent a specific canoe item."""
     return Item(name='canoe', rent_price=250, amount=1)
 
-@pytest.fixture(name='empty_db')
-def empty_db_fixture():
+@pytest.fixture(name='empty_inv')
+def empty_inv_fixture():
     """Use to represent an empty inventory."""
     return Inventory()
 
-@pytest.fixture(name='db_with_item')
-def db_with_item_fixture(db):
+@pytest.fixture(name='inv_with_item')
+def inv_with_item_fixture(db_inv):
     """Use to handle inventory with item(s) already."""
     inv = Inventory()
-    inv.set_database(db)
+    inv.set_database(db_inv)
     inv.set_item(name='tent', rent_price=150, amount=1)
     return inv
 
@@ -58,7 +57,7 @@ def db_inv_fixture(mocker):
     return mock_db_inv
 
 
-def test_inventory__add_item_to_empty_inv(mocker, canoe, empty_db):
+def test_inventory__add_item_to_empty_inv(mocker, canoe, empty_inv):
     """Use to unit test set_item of Inventory.
 
     Specifically test that we can add an item to an empty
@@ -67,13 +66,38 @@ def test_inventory__add_item_to_empty_inv(mocker, canoe, empty_db):
     # Arrange
     mock_db_inv = mocker.Mock(spec=Database)
     mock_db_inv.add_item_to_db.return_value = None
-    empty_db.set_database(mock_db_inv)
+    empty_inv.set_database(mock_db_inv)
 
     # Act
-    empty_db.set_item(canoe.name, canoe.rent_price, canoe.amount)
+    empty_inv.set_item(canoe.name, canoe.rent_price, canoe.amount)
 
     # Assert
     mock_db_inv.add_item_to_db.assert_called_once()
     mock_db_inv.add_item_to_db.assert_called_with(canoe.name,
                                                   canoe.rent_price,
                                                   canoe.amount)
+
+
+def test_inventory__add_item_to_inv(db_inv, canoe, inv_with_item):
+    """Use to unit test set_item of Inventory.
+
+    Specifically test that we can add an item to inventory
+    that already contains at least one item.
+    """
+    # Arrange
+    inv_with_item.set_database(db_inv)
+    # Since the inventory is not empty, set_item will have been called
+    # more than once (in this case, exactly twice)
+    exp_call_cnt = 1 + 1
+
+    # Act
+    inv_with_item.set_item(canoe.name, canoe.rent_price,
+                           canoe.amount)
+
+    # Assert
+    actual_call_cnt = db_inv.add_item_to_db.call_count
+    assert actual_call_cnt == exp_call_cnt
+
+    db_inv.add_item_to_db.assert_called_with(canoe.name,
+                                             canoe.rent_price,
+                                             canoe.amount)
